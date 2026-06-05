@@ -5,7 +5,10 @@ import { connectDB, disconnectDB } from "./config/db.js";
 // Import Routes
 import movieRoutes from './routes/movieRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-import watchlistRoutes from './routes/watchlistRoutes.js'; 
+import watchlistRoutes from './routes/watchlistRoutes.js';
+
+// Import middleware
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 config(); 
 connectDB(); 
@@ -21,6 +24,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/movies", movieRoutes); 
 app.use("/auth", authRoutes);  
 app.use("/watchlist", watchlistRoutes); 
+
+// Catch requests to routes that do not exist
+app.use(notFound);
+
+// Global error handler - must be registered after all routes
+app.use(errorHandler);
 
 // Run on a port where no app is running 
 const PORT = 5001; 
